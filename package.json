@@ -4,14 +4,23 @@
   "description": "",
   "main": "app.js",
   "scripts": {
-    "start": "node app.js"
+    "start": "node app.js",
+    "server": "nodemon app.js",
+    "client": "npm run start --prefix client",
+    "dev": "concurrently \"npm run server\" \"npm run client\""
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "concurrently": "^5.1.0",
     "config": "^3.2.5",
     "express": "^4.17.1",
-    "mongoose": "^5.8.9"
+    "mongoose": "^5.8.9",
+    "node-rsa": "^1.0.7",
+    "vk-io": "^4.0.0-rc.30"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.2"
   }
 }

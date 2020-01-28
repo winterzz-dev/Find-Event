@@ -8,6 +8,8 @@ const app = express();
 app.use(express.json({ extended: true }));
 app.use("/api/cities", require("./routes/cities.routes"));
 app.use("/api/city", require("./routes/city.routes"));
+app.use("/api/events", require("./routes/events.routes"));
+app.use("/api/keys", require("./routes/keys.routes"));
 
 const PORT = config.get("port") || 5000;
 
