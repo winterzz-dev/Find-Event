@@ -15,10 +15,15 @@ import Icon28Newsfeed from "@vkontakte/icons/dist/28/newsfeed";
 import Home from "./panels/Home";
 import Persik from "./panels/Persik";
 
+import { SettingsContext } from "./context/SettingsContext";
+
 const App = () => {
   const [activeStory, setActiveStory] = useState("home");
   const [fetchedUser, setUser] = useState(null);
   const [popout, setPopout] = useState(<ScreenSpinner size="large" />);
+  let city_id, country_id, user_id, user_token;
+  const app_id = "your_app_id";
+  const scope = "your_scopes";
 
   useEffect(() => {
     connect.subscribe(({ detail: { type, data } }) => {
@@ -35,6 +40,15 @@ const App = () => {
     async function fetchData() {
       const user = await connect.send("VKWebAppGetUserInfo");
       setUser(user);
+      city_id = user.city.id;
+      country_id = user.country.id;
+      user_id = user.id;
+      const token_tmp = await connect.send("VKWebAppGetAuthToken", {
+        app_id: app_id,
+        scope: scope
+      });
+      user_token = await token_tmp.access_token;
+      console.log(city_id, country_id, user_id, user_token);
       setPopout(null);
     }
     fetchData();
@@ -49,36 +63,45 @@ const App = () => {
   };
 
   return (
-    <Epic
-      activeStory={activeStory}
-      tabbar={
-        <Tabbar>
-          <TabbarItem
-            onClick={onStoryChange}
-            selected={activeStory === "home"}
-            data-story="home"
-            text="События"
-          >
-            <Icon28Newsfeed />
-          </TabbarItem>
-          <TabbarItem
-            onClick={onStoryChange}
-            selected={activeStory === "persik"}
-            data-story="persik"
-            text="Поиск"
-          >
-            <Icon28Search />
-          </TabbarItem>
-        </Tabbar>
-      }
+    <SettingsContext.Provider
+      value={{
+        city_id,
+        country_id,
+        user_id,
+        user_token
+      }}
     >
-      <View id="home" activePanel="home">
-        <Home id="home" fetchedUser={fetchedUser} go={go} />
-      </View>
-      <View id="persik" activePanel="persik">
-        <Persik id="persik" go={go} />
-      </View>
-    </Epic>
+      <Epic
+        activeStory={activeStory}
+        tabbar={
+          <Tabbar>
+            <TabbarItem
+              onClick={onStoryChange}
+              selected={activeStory === "home"}
+              data-story="home"
+              text="События"
+            >
+              <Icon28Newsfeed />
+            </TabbarItem>
+            <TabbarItem
+              onClick={onStoryChange}
+              selected={activeStory === "persik"}
+              data-story="persik"
+              text="Поиск"
+            >
+              <Icon28Search />
+            </TabbarItem>
+          </Tabbar>
+        }
+      >
+        <View id="home" activePanel="home">
+          <Home id="home" fetchedUser={fetchedUser} go={go} />
+        </View>
+        <View id="persik" activePanel="persik">
+          <Persik id="persik" go={go} />
+        </View>
+      </Epic>
+    </SettingsContext.Provider>
   );
 };
 
