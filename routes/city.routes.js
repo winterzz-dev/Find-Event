@@ -25,7 +25,7 @@ router.post("/get", async (req, res) => {
     let city = await City.findOne({ title, countryId });
 
     if (city) {
-      return res.status(200).json({ id: city.vkId });
+      return res.status(200).json({ id: city.vkId, title: city.title });
     } else {
       const result = await find(countryId, title);
       if (result.length != 0) {
@@ -35,7 +35,9 @@ router.post("/get", async (req, res) => {
           title
         });
         await city.save();
-        return res.status(200).json({ id: result[0].id });
+        return res
+          .status(200)
+          .json({ id: result[0].id, title: result[0].title });
       } else {
         res.status(404).json({ message: "Такой город не найден!" });
       }
