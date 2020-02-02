@@ -69,10 +69,14 @@ const App = () => {
   return (
     <SettingsContext.Provider
       value={{
-        city_id,
-        country_id,
-        user_id,
-        user_token
+        city_id: 1,
+        country_id: 1,
+        user_id: 1,
+        user_token:
+          "c6c09b62c35d4a04c4a2289d0d2e6cdc3e0e6e3ced8b55e02b27bc96c92642628620808c0140c7f9cfff0",
+        set_city_id: id => {
+          this.city_id = id;
+        }
       }}
     >
       <Epic

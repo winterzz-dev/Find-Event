@@ -13,7 +13,7 @@ import { useHttp } from "../hooks/http.hook";
 
 const Persik = props => {
   const [city, setCity] = useState("");
-  const { city_id, country_id } = useContext(SettingsContext);
+  const { city_id, country_id, set_city_id } = useContext(SettingsContext);
 
   const { request } = useHttp();
 
@@ -21,15 +21,16 @@ const Persik = props => {
     if (event.key === "Enter") {
       event.preventDefault();
       try {
-        console.log({
-          title: city,
-          countryId: country_id
-        });
+        // console.log({
+        //   title: city,
+        //   countryId: country_id
+        // });
         const data = await request("/api/city/get", "POST", {
           title: city,
           countryId: 1
         });
-        city_id = data.id;
+        console.log(data);
+        set_city_id(data.id);
         city = data.title;
       } catch (error) {}
     }

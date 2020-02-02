@@ -43,13 +43,14 @@ const Home = ({ id, fetchedUser }) => {
       key.importKey(public_key.public_key);
       const encrypted_key = await key.encrypt(tmp_user_token, "base64");
       //TODO: set user settings
+      console.log(city_id);
       const fetched = await request(
         "/api/events/find",
         "POST",
         {
           user_id: 1,
           token: encrypted_key,
-          city_id: 1,
+          city_id,
           categories: "Music,Dance"
         },
         {}
