@@ -1,14 +1,21 @@
 const { Router } = require("express");
 const router = Router();
 const VK = require("vk-io").VK;
+const NodeRSA = require("node-rsa");
+const private_keys = require("../keys");
 
 // /api/events/find
 router.post("/find", async (req, res) => {
   try {
-    let { user_ud, token, city_id, categories } = req.body;
+    let { user_id, token, city_id, categories } = req.body;
+
+    const key = await new NodeRSA();
+    key.importKey(private_keys[user_id]);
+
+    const decrypted_key = key.decrypt(token, "utf8");
 
     const vk = new VK({
-      token
+      token: decrypted_key
     });
 
     let events = [];

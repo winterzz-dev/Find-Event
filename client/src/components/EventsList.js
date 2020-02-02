@@ -21,7 +21,14 @@ export const EventsList = ({ events }) => {
     <Group title="События">
       <List>
         {events.map((event, index) => {
-          return <Event title={event.name} date="01.01.2020" key={event.id} />;
+          return (
+            <Event
+              title={event.name}
+              date="01.01.2020"
+              key={event.id}
+              photo={event.photo}
+            />
+          );
         })}
       </List>
     </Group>
