@@ -1,26 +1,14 @@
-import React, { useContext, useCallback, useState, useEffect } from "react";
-
+import React, { useCallback, useState, useEffect } from "react";
 import NodeRSA from "node-rsa";
-
 import PropTypes from "prop-types";
-import Panel from "@vkontakte/vkui/dist/components/Panel/Panel";
-import PanelHeader from "@vkontakte/vkui/dist/components/PanelHeader/PanelHeader";
-import Group from "@vkontakte/vkui/dist/components/Group/Group";
-import Cell from "@vkontakte/vkui/dist/components/Cell/Cell";
-import Avatar from "@vkontakte/vkui/dist/components/Avatar/Avatar";
-// import List from "@vkontakte/vkui/dist/components/List/List";
-// import Div from "@vkontakte/vkui/dist/components/Div/Div";
-// import Button from "@vkontakte/vkui/dist/components/Button/Button";
+import { List, Group, Cell, Avatar, Panel, PanelHeader } from "@vkontakte/vkui";
 
 import { EventsList } from "../components/EventsList";
-
-import { SettingsContext } from "../context/SettingsContext";
 import { useHttp } from "../hooks/http.hook";
 
-const Home = ({ id, fetchedUser }) => {
+const Home = props => {
   const [events, setEvents] = useState([]);
   const { loading, request } = useHttp();
-  const { country_id, city_id, user_token } = useContext(SettingsContext);
 
   let public_key;
 
@@ -33,25 +21,22 @@ const Home = ({ id, fetchedUser }) => {
         "/api/keys/get",
         "POST",
         {
-          user_id: 1
+          user_id: props.userId
         },
         {}
       );
-      const tmp_user_token =
-        "c6c09b62c35d4a04c4a2289d0d2e6cdc3e0e6e3ced8b55e02b27bc96c92642628620808c0140c7f9cfff0";
+
       const key = await new NodeRSA();
       key.importKey(public_key.public_key);
-      const encrypted_key = await key.encrypt(tmp_user_token, "base64");
-      //TODO: set user settings
-      console.log(city_id);
+      const encrypted_key = await key.encrypt(props.token, "base64");
       const fetched = await request(
         "/api/events/find",
         "POST",
         {
           user_id: 1,
           token: encrypted_key,
-          city_id,
-          categories: "Music,Dance"
+          city_id: props.cityId,
+          categories: props.categories
         },
         {}
       );
@@ -59,32 +44,47 @@ const Home = ({ id, fetchedUser }) => {
     } catch (error) {
       console.error(error);
     }
-  }, [country_id, city_id, user_token, request]);
+  }, [props]);
 
   useEffect(() => {
     loadEvents();
   }, [loadEvents]);
 
+  if (loading) {
+    return (
+      <>
+        <Panel id={props.id}>
+          <PanelHeader>События</PanelHeader>
+          <Group title="События">
+            <List>
+              <Cell>Загрузка</Cell>
+            </List>
+          </Group>
+        </Panel>
+      </>
+    );
+  }
+
   return (
     <>
       {!loading && (
-        <Panel id={id}>
+        <Panel id={props.id}>
           <PanelHeader>События</PanelHeader>
-          {fetchedUser && (
+          {props.fetchedUser && (
             <Group title="Пользователь">
               <Cell
                 before={
-                  fetchedUser.photo_200 ? (
-                    <Avatar src={fetchedUser.photo_200} />
+                  props.fetchedUser.photo_200 ? (
+                    <Avatar src={props.fetchedUser.photo_200} />
                   ) : null
                 }
                 description={
-                  fetchedUser.city && fetchedUser.city.title
-                    ? fetchedUser.city.title
+                  props.fetchedUser.city && props.fetchedUser.city.title
+                    ? props.fetchedUser.city.title
                     : ""
                 }
               >
-                {`${fetchedUser.first_name} ${fetchedUser.last_name}`}
+                {`${props.fetchedUser.first_name} ${props.fetchedUser.last_name}`}
               </Cell>
             </Group>
           )}
