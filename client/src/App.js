@@ -12,6 +12,8 @@ import Epic from "@vkontakte/vkui/dist/components/Epic/Epic";
 import Icon28Search from "@vkontakte/icons/dist/28/search";
 import Icon28Newsfeed from "@vkontakte/icons/dist/28/newsfeed";
 
+import { Alert } from "@vkontakte/vkui";
+
 import Home from "./panels/Home";
 import Settings from "./panels/Settings";
 
@@ -30,6 +32,15 @@ const App = () => {
     "ea900e57253a509f94c13c36a6cdf6f5ecea0ffb356b5c818af7be039c4c4638da53cc28e33e41de97099"
   );
   const [categories, setCategories] = useState(["Music", "Dance", "фестиваль"]);
+
+  const deleteCategory = item => {
+    setCategories(categories.filter(iter => item != iter));
+  };
+
+  const addCategory = item => {
+    setCategories(categories.push(item));
+  };
+
   // const appSettings = {
   //   app_id: "your_app_id",
   //   scope: "groups"
@@ -68,7 +79,7 @@ const App = () => {
       // });
       // user_token = await token_tmp.access_token;
       // setUserToken(user_token);
-      setPopout(null);
+      // setPopout(null);
     }
     fetchData();
   }, []);
@@ -107,6 +118,7 @@ const App = () => {
             id="home"
             fetchedUser={fetchedUser}
             cityId={userCityId}
+            cityTitle={userCityTitle}
             token={userToken}
             countryId={userCountryId}
             userId={userId}

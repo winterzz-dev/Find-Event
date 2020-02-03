@@ -1,14 +1,25 @@
 import React, { useContext, useState } from "react";
 
-import Panel from "@vkontakte/vkui/dist/components/Panel/Panel";
-import PanelHeader from "@vkontakte/vkui/dist/components/PanelHeader/PanelHeader";
-import { FormLayout, FormLayoutGroup, Input } from "@vkontakte/vkui";
+import {
+  FormLayout,
+  FormLayoutGroup,
+  Input,
+  Snackbar,
+  Avatar,
+  PanelHeader,
+  Panel,
+  Group
+} from "@vkontakte/vkui";
+
+import Icon16Done from "@vkontakte/icons/dist/16/done";
+import Icon16Clear from "@vkontakte/icons/dist/16/clear";
 
 import { SettingsContext } from "../context/SettingsContext";
 import { useHttp } from "../hooks/http.hook";
 
 const Settings = props => {
   const [cityReq, setCityReq] = useState("");
+  const [snackbar, setSnackbar] = useState(null);
   const { setCity } = useContext(SettingsContext);
 
   const { request } = useHttp();
@@ -22,23 +33,65 @@ const Settings = props => {
           countryId: props.countryId
         });
         setCity(data.id, data.title);
-      } catch (error) {}
+        doneMessage();
+      } catch (error) {
+        errorMessage();
+      }
     }
+  };
+
+  const errorMessage = () => {
+    if (snackbar) return;
+    setSnackbar(
+      <Snackbar
+        layout="vertical"
+        onClose={() => setSnackbar(null)}
+        before={
+          <Avatar size={24} style={{ backgroundColor: "var(--destructive)" }}>
+            <Icon16Clear fill="#fff" width={14} height={14} />
+          </Avatar>
+        }
+      >
+        Произошла ошибка
+      </Snackbar>
+    );
+  };
+
+  const doneMessage = () => {
+    if (snackbar) return;
+    setSnackbar(
+      <Snackbar
+        layout="vertical"
+        onClose={() => setSnackbar(null)}
+        before={
+          <Avatar size={24} style={{ backgroundColor: "var(--accent)" }}>
+            <Icon16Done fill="#fff" width={14} height={14} />
+          </Avatar>
+        }
+      >
+        Город изменен
+      </Snackbar>
+    );
   };
 
   return (
     <Panel id={props.id}>
       <PanelHeader>Настройки</PanelHeader>
-      <FormLayout>
-        <FormLayoutGroup top="Город">
-          <Input
-            type="text"
-            defaultValue={props.cityTitle}
-            onChange={e => setCityReq(e.target.value)}
-            onKeyPress={pressHandler}
-          />
-        </FormLayoutGroup>
-      </FormLayout>
+      <Group>
+        <FormLayout>
+          <FormLayoutGroup top="Город">
+            <Input
+              type="text"
+              defaultValue={props.cityTitle}
+              onChange={e => setCityReq(e.target.value)}
+              onKeyPress={pressHandler}
+            />
+          </FormLayoutGroup>
+        </FormLayout>
+      </Group>
+
+      <Group title="Интересные катеории"></Group>
+      {snackbar}
     </Panel>
   );
 };

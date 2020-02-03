@@ -1,7 +1,15 @@
 import React, { useCallback, useState, useEffect } from "react";
 import NodeRSA from "node-rsa";
 import PropTypes from "prop-types";
-import { List, Group, Cell, Avatar, Panel, PanelHeader } from "@vkontakte/vkui";
+import {
+  List,
+  Group,
+  Cell,
+  Avatar,
+  Panel,
+  PanelHeader,
+  Footer
+} from "@vkontakte/vkui";
 
 import { EventsList } from "../components/EventsList";
 import { useHttp } from "../hooks/http.hook";
@@ -33,7 +41,7 @@ const Home = props => {
         "/api/events/find",
         "POST",
         {
-          user_id: 1,
+          user_id: props.userId,
           token: encrypted_key,
           city_id: props.cityId,
           categories: props.categories
@@ -55,7 +63,7 @@ const Home = props => {
       <>
         <Panel id={props.id}>
           <PanelHeader>События</PanelHeader>
-          <Group title="События">
+          <Group title={props.cityTitle}>
             <List>
               <Cell>Загрузка</Cell>
             </List>
@@ -89,6 +97,7 @@ const Home = props => {
             </Group>
           )}
           <EventsList events={events} />
+          <Footer>{events.length} событий</Footer>
         </Panel>
       )}
     </>
