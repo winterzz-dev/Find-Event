@@ -11,6 +11,7 @@ app.use("/api/city", require("./routes/city.routes"));
 app.use("/api/country", require("./routes/country.routes"));
 app.use("/api/events", require("./routes/events.routes"));
 app.use("/api/keys", require("./routes/keys.routes"));
+app.use("/api/info", require("./routes/info.routes"));
 
 const PORT = config.get("port") || 5000;
 
