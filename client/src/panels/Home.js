@@ -52,7 +52,7 @@ const Home = props => {
     } catch (error) {
       console.error(error);
     }
-  }, [props]);
+  }, [props.userId, props.token, props.cityId, props.categories]);
 
   useEffect(() => {
     loadEvents();
@@ -96,7 +96,7 @@ const Home = props => {
               </Cell>
             </Group>
           )}
-          <EventsList events={events} />
+          <EventsList events={events} cityTitle={props.cityTitle} />
           <Footer>{events.length} событий</Footer>
         </Panel>
       )}

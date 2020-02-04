@@ -6,7 +6,7 @@ import List from "@vkontakte/vkui/dist/components/List/List";
 
 import { Event } from "../components/Event";
 
-export const EventsList = ({ events }) => {
+export const EventsList = ({ events, cityTitle }) => {
   if (!events.length) {
     return (
       <Group title="События">
@@ -18,7 +18,7 @@ export const EventsList = ({ events }) => {
   }
 
   return (
-    <Group title="События">
+    <Group title={cityTitle}>
       <List>
         {events.map((event, index) => {
           return (

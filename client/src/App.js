@@ -1,18 +1,11 @@
 import React, { useState, useEffect } from "react";
 import connect from "@vkontakte/vk-connect";
 
-import View from "@vkontakte/vkui/dist/components/View/View";
-import ScreenSpinner from "@vkontakte/vkui/dist/components/ScreenSpinner/ScreenSpinner";
+import { View, ScreenSpinner, Tabbar, TabbarItem, Epic } from "@vkontakte/vkui";
 import "@vkontakte/vkui/dist/vkui.css";
-
-import Tabbar from "@vkontakte/vkui/dist/components/Tabbar/Tabbar";
-import TabbarItem from "@vkontakte/vkui/dist/components/TabbarItem/TabbarItem";
-import Epic from "@vkontakte/vkui/dist/components/Epic/Epic";
 
 import Icon28Search from "@vkontakte/icons/dist/28/search";
 import Icon28Newsfeed from "@vkontakte/icons/dist/28/newsfeed";
-
-import { Alert } from "@vkontakte/vkui";
 
 import Home from "./panels/Home";
 import Settings from "./panels/Settings";
@@ -29,7 +22,7 @@ const App = () => {
   const [userCountryId, setUserCountryId] = useState(1);
   const [userId, setUserId] = useState(1);
   const [userToken, setUserToken] = useState(
-    "ea900e57253a509f94c13c36a6cdf6f5ecea0ffb356b5c818af7be039c4c4638da53cc28e33e41de97099"
+    "0445945d406065f1b39b789a3e46b1f7444903a6140b0b92e6c1aada1ef8522f59e5058e7a6b916bb3da7"
   );
   const [categories, setCategories] = useState(["Music", "Dance", "фестиваль"]);
 
@@ -46,9 +39,9 @@ const App = () => {
   //   scope: "groups"
   // };
 
-  const setCity = async (id, title) => {
-    await setUserCityId(id);
-    await setUserCityTitle(title);
+  const setCity = (id, title) => {
+    setUserCityId(id);
+    setUserCityTitle(title);
   };
 
   useEffect(() => {
@@ -82,7 +75,7 @@ const App = () => {
       // setPopout(null);
     }
     fetchData();
-  }, []);
+  }, [userCityId, userToken]);
 
   const onStoryChange = e => {
     setActiveStory(e.currentTarget.dataset.story);
@@ -104,8 +97,8 @@ const App = () => {
             </TabbarItem>
             <TabbarItem
               onClick={onStoryChange}
-              selected={activeStory === "persik"}
-              data-story="persik"
+              selected={activeStory === "settings"}
+              data-story="settings"
               text="Настройки"
             >
               <Icon28Search />
@@ -125,9 +118,9 @@ const App = () => {
             categories={categories.join(",")}
           />
         </View>
-        <View id="persik" activePanel="persik">
+        <View id="settings" activePanel="settings">
           <Settings
-            id="persik"
+            id="settings"
             cityTitle={userCityTitle}
             countryId={userCountryId}
           />
