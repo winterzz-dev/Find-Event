@@ -27,6 +27,7 @@ export const EventsList = ({ events, cityTitle }) => {
               date="01.01.2020"
               key={event.id}
               photo={event.photo}
+              id={event.id}
             />
           );
         })}

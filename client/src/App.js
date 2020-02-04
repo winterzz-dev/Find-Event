@@ -7,7 +7,7 @@ import "@vkontakte/vkui/dist/vkui.css";
 import Icon28Search from "@vkontakte/icons/dist/28/search";
 import Icon28Newsfeed from "@vkontakte/icons/dist/28/newsfeed";
 
-import Home from "./panels/Home";
+import { HomeView } from "./panels/HomeView";
 import Settings from "./panels/Settings";
 
 import { SettingsContext } from "./context/SettingsContext";
@@ -106,18 +106,16 @@ const App = () => {
           </Tabbar>
         }
       >
-        <View id="home" activePanel="home">
-          <Home
-            id="home"
-            fetchedUser={fetchedUser}
-            cityId={userCityId}
-            cityTitle={userCityTitle}
-            token={userToken}
-            countryId={userCountryId}
-            userId={userId}
-            categories={categories.join(",")}
-          />
-        </View>
+        <HomeView
+          id="home"
+          fetchedUser={fetchedUser}
+          cityId={userCityId}
+          cityTitle={userCityTitle}
+          token={userToken}
+          countryId={userCountryId}
+          userId={userId}
+          categories={categories.join(",")}
+        />
         <View id="settings" activePanel="settings">
           <Settings
             id="settings"

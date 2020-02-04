@@ -14,7 +14,7 @@ import {
 import { EventsList } from "../components/EventsList";
 import { useHttp } from "../hooks/http.hook";
 
-const Home = props => {
+export const Home = props => {
   const [events, setEvents] = useState([]);
   const { loading, request } = useHttp();
 
@@ -116,4 +116,4 @@ Home.propTypes = {
   })
 };
 
-export default Home;
+// export default Home;
