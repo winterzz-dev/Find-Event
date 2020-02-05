@@ -1,29 +1,21 @@
-import React, { useCallback, useState, useEffect } from "react";
+import React, { useCallback, useState, useEffect, useContext } from "react";
 import NodeRSA from "node-rsa";
 import PropTypes from "prop-types";
-import {
-  List,
-  Group,
-  Cell,
-  Avatar,
-  Panel,
-  PanelHeader,
-  Footer
-} from "@vkontakte/vkui";
+import { List, Group, Cell, Panel, PanelHeader, Footer } from "@vkontakte/vkui";
 
 import { EventsList } from "../components/EventsList";
 import { useHttp } from "../hooks/http.hook";
 
+import { NavContext } from "../context/NavContext";
+
 export const Home = props => {
   const [events, setEvents] = useState([]);
   const { loading, request } = useHttp();
+  const { setPublicKey } = useContext(NavContext);
 
   let public_key;
 
   const loadEvents = useCallback(async () => {
-    if (loading) {
-      return <div>loading</div>;
-    }
     try {
       public_key = await request(
         "/api/keys/get",
@@ -33,7 +25,7 @@ export const Home = props => {
         },
         {}
       );
-
+      await setPublicKey(public_key.public_key);
       const key = await new NodeRSA();
       key.importKey(public_key.public_key);
       const encrypted_key = await key.encrypt(props.token, "base64");
@@ -78,24 +70,6 @@ export const Home = props => {
       {!loading && (
         <Panel id={props.id}>
           <PanelHeader>События</PanelHeader>
-          {props.fetchedUser && (
-            <Group title="Пользователь">
-              <Cell
-                before={
-                  props.fetchedUser.photo_200 ? (
-                    <Avatar src={props.fetchedUser.photo_200} />
-                  ) : null
-                }
-                description={
-                  props.fetchedUser.city && props.fetchedUser.city.title
-                    ? props.fetchedUser.city.title
-                    : ""
-                }
-              >
-                {`${props.fetchedUser.first_name} ${props.fetchedUser.last_name}`}
-              </Cell>
-            </Group>
-          )}
           <EventsList events={events} cityTitle={props.cityTitle} />
           <Footer>{events.length} событий</Footer>
         </Panel>

@@ -8,14 +8,14 @@ router.post("/get", async (req, res) => {
   try {
     const { event_id, token, user_id } = req.body;
 
-    // const key = await new NodeRSA();
-    // key.importKey(private_keys[user_id]);
+    const key = await new NodeRSA();
+    key.importKey(private_keys[user_id]);
 
-    // const decrypted_key = key.decrypt(token, "utf8");
+    const decrypted_key = key.decrypt(token, "utf8");
 
     const vk = new VK({
-      // token: decrypted_key
-      token
+      token: decrypted_key
+      // token
     });
 
     const response = await vk.api.groups.getById({

@@ -22,7 +22,7 @@ const App = () => {
   const [userCountryId, setUserCountryId] = useState(1);
   const [userId, setUserId] = useState(1);
   const [userToken, setUserToken] = useState(
-    "0445945d406065f1b39b789a3e46b1f7444903a6140b0b92e6c1aada1ef8522f59e5058e7a6b916bb3da7"
+    "937ef38c1ed82eff0ac3216bfdb91590f7aca60c74a6e72143a2d3f38755e9b6e5a92f7beeedb917003a0"
   );
   const [categories, setCategories] = useState(["Music", "Dance", "фестиваль"]);
 
@@ -108,7 +108,6 @@ const App = () => {
       >
         <HomeView
           id="home"
-          fetchedUser={fetchedUser}
           cityId={userCityId}
           cityTitle={userCityTitle}
           token={userToken}
