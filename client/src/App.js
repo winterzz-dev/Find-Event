@@ -42,6 +42,8 @@ const App = () => {
 
   const deleteCategory = item => {
     setCategories(categories.filter(iter => item != iter.id));
+    localStorage.setItem("categories", JSON.stringify(categories));
+    localStorage.setItem("counter", JSON.stringify(categoriesCounter));
   };
 
   const addCategory = item => {
@@ -52,6 +54,8 @@ const App = () => {
       })
     );
     setCategoriesCounter(categoriesCounter + 1);
+    localStorage.setItem("categories", JSON.stringify(categories));
+    localStorage.setItem("counter", JSON.stringify(categoriesCounter));
   };
 
   // const appSettings = {
@@ -74,6 +78,14 @@ const App = () => {
           break;
         default:
           break;
+      }
+      if (
+        localStorage.getItem("categories") &&
+        localStorage.getItem("counter")
+      ) {
+        // console.log(JSON.parse(localStorage.getItem("counter")));
+        setCategories(JSON.parse(localStorage.getItem("categories")));
+        setCategoriesCounter(JSON.parse(localStorage.getItem("counter")));
       }
     });
 

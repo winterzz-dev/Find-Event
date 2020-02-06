@@ -47,7 +47,7 @@ const Settings = props => {
     if (event.key === "Enter") {
       event.preventDefault();
       try {
-        addCategory(currentCategory);
+        await addCategory(currentCategory);
         doneMessage("Интерес добавлен");
       } catch (error) {
         errorMessage("Произошла ошибка");
