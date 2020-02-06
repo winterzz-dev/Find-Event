@@ -22,16 +22,36 @@ const App = () => {
   const [userCountryId, setUserCountryId] = useState(1);
   const [userId, setUserId] = useState(1);
   const [userToken, setUserToken] = useState(
-    "937ef38c1ed82eff0ac3216bfdb91590f7aca60c74a6e72143a2d3f38755e9b6e5a92f7beeedb917003a0"
+    "6d4398fae365c0394b7e04c3a1690cd0a2929d6ec05ad1dfc08c6d707549c957b0e75e22112812cd68232"
   );
-  const [categories, setCategories] = useState(["Music", "Dance", "фестиваль"]);
+  const [categories, setCategories] = useState([
+    {
+      id: 1,
+      title: "Music"
+    },
+    {
+      id: 2,
+      title: "Dance"
+    },
+    {
+      id: 3,
+      title: "фестиваль"
+    }
+  ]);
+  const [categoriesCounter, setCategoriesCounter] = useState(4);
 
   const deleteCategory = item => {
-    setCategories(categories.filter(iter => item != iter));
+    setCategories(categories.filter(iter => item != iter.id));
   };
 
   const addCategory = item => {
-    setCategories(categories.push(item));
+    setCategories(
+      categories.concat({
+        id: categoriesCounter,
+        title: item
+      })
+    );
+    setCategoriesCounter(categoriesCounter + 1);
   };
 
   // const appSettings = {
@@ -82,7 +102,7 @@ const App = () => {
   };
 
   return (
-    <SettingsContext.Provider value={{ setCity }}>
+    <SettingsContext.Provider value={{ setCity, addCategory, deleteCategory }}>
       <Epic
         activeStory={activeStory}
         tabbar={
@@ -113,13 +133,14 @@ const App = () => {
           token={userToken}
           countryId={userCountryId}
           userId={userId}
-          categories={categories.join(",")}
+          categories={categories.map(item => item.title).join(",")}
         />
         <View id="settings" activePanel="settings">
           <Settings
             id="settings"
             cityTitle={userCityTitle}
             countryId={userCountryId}
+            categories={categories}
           />
         </View>
       </Epic>

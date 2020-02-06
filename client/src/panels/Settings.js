@@ -14,17 +14,20 @@ import {
 import Icon16Done from "@vkontakte/icons/dist/16/done";
 import Icon16Clear from "@vkontakte/icons/dist/16/clear";
 
+import { CategoriesList } from "../components/CategoriesList";
+
 import { SettingsContext } from "../context/SettingsContext";
 import { useHttp } from "../hooks/http.hook";
 
 const Settings = props => {
   const [cityReq, setCityReq] = useState("");
+  const [currentCategory, setCurrentCategory] = useState("");
   const [snackbar, setSnackbar] = useState(null);
-  const { setCity } = useContext(SettingsContext);
+  const { setCity, addCategory } = useContext(SettingsContext);
 
   const { request } = useHttp();
 
-  const pressHandler = async event => {
+  const cityUpdateHandler = async event => {
     if (event.key === "Enter") {
       event.preventDefault();
       try {
@@ -33,14 +36,26 @@ const Settings = props => {
           countryId: props.countryId
         });
         setCity(data.id, data.title);
-        doneMessage();
+        doneMessage("Город изменен!");
       } catch (error) {
-        errorMessage();
+        errorMessage("Произошла ошибка");
       }
     }
   };
 
-  const errorMessage = () => {
+  const addCategoryHandler = async event => {
+    if (event.key === "Enter") {
+      event.preventDefault();
+      try {
+        addCategory(currentCategory);
+        doneMessage("Интерес добавлен");
+      } catch (error) {
+        errorMessage("Произошла ошибка");
+      }
+    }
+  };
+
+  const errorMessage = title => {
     if (snackbar) return;
     setSnackbar(
       <Snackbar
@@ -52,12 +67,12 @@ const Settings = props => {
           </Avatar>
         }
       >
-        Произошла ошибка
+        {title}
       </Snackbar>
     );
   };
 
-  const doneMessage = () => {
+  const doneMessage = title => {
     if (snackbar) return;
     setSnackbar(
       <Snackbar
@@ -69,7 +84,7 @@ const Settings = props => {
           </Avatar>
         }
       >
-        Город изменен
+        {title}
       </Snackbar>
     );
   };
@@ -84,13 +99,25 @@ const Settings = props => {
               type="text"
               defaultValue={props.cityTitle}
               onChange={e => setCityReq(e.target.value)}
-              onKeyPress={pressHandler}
+              onKeyPress={cityUpdateHandler}
             />
           </FormLayoutGroup>
         </FormLayout>
       </Group>
 
-      <Group title="Интересные катеории"></Group>
+      <Group>
+        <FormLayout>
+          <FormLayoutGroup top="Добавить интерес">
+            <Input
+              type="text"
+              onChange={e => setCurrentCategory(e.target.value)}
+              onKeyPress={addCategoryHandler}
+            />
+          </FormLayoutGroup>
+        </FormLayout>
+      </Group>
+
+      <CategoriesList categories={props.categories} />
       {snackbar}
     </Panel>
   );
